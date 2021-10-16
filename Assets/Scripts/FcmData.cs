@@ -8,6 +8,7 @@ using SimpleJSON;
 using TMPro;
 using UnityEngine.Video;
 using UnitySocketIO;
+using UnitySocketIO.Events;
 using LitJson;
 using UnityEngine.SceneManagement;
 #pragma warning disable 0618
@@ -42,6 +43,9 @@ public class FcmData : MonoBehaviour {
     public TMP_InputField login_passwordText;
 
     [Header("Signup")]
+    public TMP_InputField amountText;
+    public TMP_InputField betAmount;
+    public TMP_InputField setAutoCashOut;
     public TMP_InputField signup_emailText;
     public TMP_InputField signup_nameText;
     public TMP_InputField signup_passwordText;
@@ -102,7 +106,7 @@ public class FcmData : MonoBehaviour {
     // string[] online_Users;
     string[] users_Bids_Username;
     string[] users_Bids_Amount;
-
+    public SocketIOController io;
 
     //Bool 
     //private bool signedIn = false;
@@ -110,8 +114,9 @@ public class FcmData : MonoBehaviour {
     #endregion
     public int authMode = 0;
     private void Start() {
-        login_Email_usernameText.text=PlayerPrefs.GetString("_PlayerEmail");
-        login_passwordText.text= PlayerPrefs.GetString("_PlayerPass");
+        //login_Email_usernameText.text=PlayerPrefs.GetString("_PlayerEmail");
+        //login_passwordText.text= PlayerPrefs.GetString("_PlayerPass");
+        amountText.text = "100";
         PlayVideo();
 		registerGO.SetActive(true);
         verifyCode_panel.SetActive(false);
@@ -119,25 +124,51 @@ public class FcmData : MonoBehaviour {
         welcomePanel.SetActive(false);
         GetOnlineUsersBid();
 
+        io = SocketIOController.instance;
+        io.On("connect", (e) => {
+            Debug.Log("Game started");
+            io.On("user list", (res) => {
+                SetResponse(res);
+            });
+        });
+        io.Connect();
+    }
+
+    void SetResponse(SocketIOEvent socketIOEvent) {
+        var res = ReceiveJsonObject.CreateFromJSON(socketIOEvent.data);
+        Debug.Log(res.userName+"    "+res.betAmount);
+    }
+
+    public void SendBetInfo() {
+        JsonType JObject = new JsonType();
+        float myTotalAmount = float.Parse(amountText.text);
+        float betamount = float.Parse(betAmount.text);
+        if (betamount < myTotalAmount) {
+            JObject.betAmount = betAmount.text;
+            JObject.autoCashAmount = setAutoCashOut.text;
+            JObject.userName = PlayerPrefs.GetString("_UserName");
+            io.Emit("bet amount", JsonUtility.ToJson(JObject));
+        } else
+            info_errorText.text = "Not enough Funds";        
     }
 
     #region ****** EXTRAS *******
     Coroutine vidCor;
     public void PlayVideo() {
-        video.SetActive(true);
-        videoPlayer.url = System.IO.Path.Combine(Application.streamingAssetsPath, "scene rocket.mp4");
+        //video.SetActive(true);
+        //videoPlayer.url = System.IO.Path.Combine(Application.streamingAssetsPath, "scene rocket.mp4");
 
-        IEnumerator _cor() {
-            yield return new WaitForEndOfFrame();
-            videoPlayer.Play();
-        }
-        vidCor = StartCoroutine(_cor());
+        //IEnumerator _cor() {
+        //    yield return new WaitForEndOfFrame();
+        //    videoPlayer.Play();
+        //}
+        //vidCor = StartCoroutine(_cor());
     }
 
     public void StopVideo() {
-        if (vidCor != null) StopCoroutine(vidCor);
-        videoPlayer.Stop();
-        video.SetActive(false);
+        //if (vidCor != null) StopCoroutine(vidCor);
+        //videoPlayer.Stop();
+        //video.SetActive(false);
     }
 
     void ChangeText(string msg, bool isRed) {
@@ -166,7 +197,7 @@ public class FcmData : MonoBehaviour {
             yield break;
         }
         Debug.Log(resultData);
-
+        info_errorText.text = "";
         JsonData json = JsonMapper.ToObject(resultData);
         string response = json["success"].ToString();
 
@@ -187,15 +218,12 @@ public class FcmData : MonoBehaviour {
             }            
         } 
         else if(response=="1") {
-            if (authMode == 0) {
+            if (authMode == 0) {                
                 signUpPanel.SetActive(false);
                 loginPanel.SetActive(true);
                 info_errorText.transform.GetComponent<TextMeshProUGUI>().SetText("Sign Up Success! Please log in.");
             }                
             if (authMode == 1) {
-                PlayerPrefs.SetString("_PlayerEmail", userData.email_address);
-                PlayerPrefs.SetString("_PlayerPass", userData.password);
-
                 verifyCode_panel.SetActive(false);
                 registerGO.SetActive(false);
                 welcomePanel.SetActive(true);
@@ -220,6 +248,10 @@ public class FcmData : MonoBehaviour {
             userData.username = signup_nameText.text;
             userData.email_address = signup_emailText.text;
             userData.password = signup_passwordText.text;
+
+            PlayerPrefs.SetString("_UserName", userData.password);
+            PlayerPrefs.SetString("_PlayerEmail", userData.email_address);
+            PlayerPrefs.SetString("_PlayerPass", userData.password);
 
             WWWForm formData = new WWWForm();
             formData.AddField("username", userData.username);
@@ -294,7 +326,6 @@ public class FcmData : MonoBehaviour {
             www.SetRequestHeader("Accept", "application/json");
             www.uploadHandler.contentType = "application/json";
             StartCoroutine(iRequest(www));
-            info_errorText.text = "Logging in...";
 
         } else {
             info_errorText.text = "Enter email or password";
