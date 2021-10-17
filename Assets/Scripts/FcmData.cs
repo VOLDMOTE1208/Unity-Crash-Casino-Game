@@ -136,7 +136,16 @@ public class FcmData : MonoBehaviour {
 
     void SetResponse(SocketIOEvent socketIOEvent) {
         var res = ReceiveJsonObject.CreateFromJSON(socketIOEvent.data);
-        Debug.Log(res.userName+"    "+res.betAmount);
+        JSONNode _data = new JSONObject();
+        _data["users_req_bids"] = new JSONArray();
+        _data["users_bids"] = new JSONArray();
+        _data["bids_req_sum"] = "10";
+        _data["bids_sum"] = "20";
+
+        _data["users_bids"][0] = new JSONObject();
+        _data["users_bids"][0]["username"] = res.userName;
+        _data["users_bids"][0]["amount"] = res.betAmount;
+        api_get_bids_res(_data.ToString());
     }
 
     public void SendBetInfo() {
@@ -146,6 +155,7 @@ public class FcmData : MonoBehaviour {
         if (betamount < myTotalAmount) {
             JObject.betAmount = betAmount.text;
             JObject.autoCashAmount = setAutoCashOut.text;
+            amountText.text = (myTotalAmount - betamount).ToString();
             JObject.userName = PlayerPrefs.GetString("_UserName");
             io.Emit("bet amount", JsonUtility.ToJson(JObject));
         } else
@@ -249,7 +259,7 @@ public class FcmData : MonoBehaviour {
             userData.email_address = signup_emailText.text;
             userData.password = signup_passwordText.text;
 
-            PlayerPrefs.SetString("_UserName", userData.password);
+            PlayerPrefs.SetString("_UserName", userData.username);
             PlayerPrefs.SetString("_PlayerEmail", userData.email_address);
             PlayerPrefs.SetString("_PlayerPass", userData.password);
 

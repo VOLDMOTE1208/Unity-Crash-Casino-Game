@@ -26,11 +26,11 @@ public class ApiProxy : MonoBehaviour {
 	}
 
 	void sendBidData() {
-		JSONNode _data = new JSONObject();
-		_data["users_req_bids"] = new JSONArray();
-		_data["users_bids"] = new JSONArray();
-		_data["bids_req_sum"] = "10";
-		_data["bids_sum"] = "20";
+        JSONNode _data = new JSONObject();
+        _data["users_req_bids"] = new JSONArray();
+        _data["users_bids"] = new JSONArray();
+        _data["bids_req_sum"] = "10";
+        _data["bids_sum"] = "20";
 
         _data["users_bids"][0] = new JSONObject();
         _data["users_bids"][0]["username"] = "test";
