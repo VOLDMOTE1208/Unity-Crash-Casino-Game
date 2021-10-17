@@ -37,7 +37,6 @@ public class FcmData : MonoBehaviour {
     //  private string myToken = null;
 
     //  private string verificationCode = null;
-
     [Header("Login")]
     public TMP_InputField login_Email_usernameText;
     public TMP_InputField login_passwordText;
@@ -69,6 +68,7 @@ public class FcmData : MonoBehaviour {
 
 
     [Header("Texts")]
+    public TMP_Text payOutText;
     //public TMP_Text errorText;
     public TMP_Text info_errorText;
     public TMP_Text welcomeText;
@@ -374,7 +374,9 @@ public class FcmData : MonoBehaviour {
 
     #region ******** Log OUT *********
     public void LogOut() {
-        Application.ExternalCall("api_logout");
+        registerGO.SetActive(true);
+        welcomePanel.SetActive(false);
+        info_errorText.text = "Log Out.";
     }
 
     public void api_logout_res(string ResponseData) {
@@ -385,8 +387,7 @@ public class FcmData : MonoBehaviour {
 
         if (code == 1) {
             ChangeText(msg, false);
-            registerGO.SetActive(true);
-            welcomePanel.SetActive(false);
+            
             //signedIn = false;
         } else {
             ChangeText(msg, true);
@@ -683,7 +684,8 @@ public class FcmData : MonoBehaviour {
         var msg = info["body"].Value;
         ChangeText(msg, false);
         gameControl.EndGame();
-		StartCoroutine(BetTime());
+        payOutText.text = "Bet";
+        StartCoroutine(BetTime());
 
 		payoutText.color = Color.red;
         roundOverText.color = Color.red;

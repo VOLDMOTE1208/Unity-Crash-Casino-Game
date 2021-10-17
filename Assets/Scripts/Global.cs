@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Global {
 
-    public static string DOMAIN = "localhost";//"31.220.108.168";//
+    public static string DOMAIN = "192.168.115.164";//"31.220.108.168";//
     public static int PORT = 3000;
     public static bool SSL_ENALBLED = false;
     /***************************************/

@@ -22,34 +22,7 @@ public class ApiProxy : MonoBehaviour {
             StartCoroutine(play());
             throw;
         }
-        sendBidData();
 	}
-
-	void sendBidData() {
-        JSONNode _data = new JSONObject();
-        _data["users_req_bids"] = new JSONArray();
-        _data["users_bids"] = new JSONArray();
-        _data["bids_req_sum"] = "10";
-        _data["bids_sum"] = "20";
-
-        _data["users_bids"][0] = new JSONObject();
-        _data["users_bids"][0]["username"] = "test";
-        _data["users_bids"][0]["amount"] = "20";
-
-        _data["users_bids"][1] = new JSONObject();
-        _data["users_bids"][1]["username"] = "test 1";
-        _data["users_bids"][1]["amount"] = "10";
-
-        _data["users_bids"][2] = new JSONObject();
-        _data["users_bids"][2]["username"] = "test 2";
-        _data["users_bids"][2]["amount"] = "20";
-
-        _data["users_bids"][3] = new JSONObject();
-        _data["users_bids"][3]["username"] = "test 3";
-        _data["users_bids"][3]["amount"] = "10";
-
-        ApiManager.api_get_bids_res(_data.ToString());
-    }
 
 	IEnumerator play() {
 		yield return new WaitForEndOfFrame();
