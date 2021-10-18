@@ -31,7 +31,7 @@ public class FcmData : MonoBehaviour {
     #region Data Fields
     UserData userData = new UserData();
     //  UserLogin loginData;
-
+    public float stepTime = 6;
     // private string url = "http://4zeetraders.com/roobet_backend/";
 
     //  private string myToken = null;
@@ -158,6 +158,7 @@ public class FcmData : MonoBehaviour {
             amountText.text = (myTotalAmount - betamount).ToString();
             JObject.userName = PlayerPrefs.GetString("_UserName");
             io.Emit("bet amount", JsonUtility.ToJson(JObject));
+            payOutText.text = "Cash Out";
         } else
             info_errorText.text = "Not enough Funds";        
     }
@@ -685,11 +686,14 @@ public class FcmData : MonoBehaviour {
         ChangeText(msg, false);
         gameControl.EndGame();
         payOutText.text = "Bet";
-        StartCoroutine(BetTime());
-
+        //StartCoroutine(BetTime());
 		payoutText.color = Color.red;
         roundOverText.color = Color.red;
         roundOverText.text = "Round Over";
+        while ((int)(stepTime - Time.deltaTime) > -1) {
+            payoutText.text = ((int)(stepTime - Time.deltaTime)).ToString();
+            stepTime -= Time.deltaTime;
+        }
     }
 
     IEnumerator BetTime() {
@@ -712,7 +716,7 @@ public class FcmData : MonoBehaviour {
     #endregion
 
 
-    public void _startGame() {
+    public void _startGame() {        
         gameControl.StartGame();
     }
 }
