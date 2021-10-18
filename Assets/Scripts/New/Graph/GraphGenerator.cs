@@ -5,7 +5,6 @@ public class GraphGenerator : MonoBehaviour {
 	public float GenScale;
 	public float xOffset;
 	public int GenPerTime;
-	//public float BigMarkStep = 0.5f;
 	public float[] StepScales;
 	public int SmallMarksCount = 5;
 	[Header("Prefabs")]
@@ -95,7 +94,6 @@ public class GraphGenerator : MonoBehaviour {
 		if (currScaleIndex + 1 >= StepScales.Length) return;
 		ResetGraph();
 		currScaleIndex++;
-		//Debug.Log("upscaling: " + StepScales[currScaleIndex]);
 		GenerateGraph();
 	}
 
@@ -108,36 +106,9 @@ public class GraphGenerator : MonoBehaviour {
 		}
 	}
 
-	// todo: edit scaling
-
-	/*
-	float oldVal;
-	public void ScaleToCurrVal(float val) {
-		//StartCoroutine(_scale(val - oldVal));
-		oldVal = val;
-	}
-	IEnumerator _scale(float delta) {
-		var sc = Vector3.one;
-		float t = Time.time;
-		float dv = 0;
-		while (t + rc.ChangeTime > Time.time) {
-			sc.y = ((oldVal + dv)) / (rc.transform.localPosition.y) * Time.fixedDeltaTime;
-			transform.localScale = sc;
-			dv += delta * Time.fixedDeltaTime / rc.ChangeTime;
-			yield return new WaitForFixedUpdate();
-		}
-		//sc.y = ((oldVal + delta) * _mult) / rc.transform.localPosition.y * Time.fixedDeltaTime;
-	}
-	*/
-
 	public void ResetGraph() {
 		points = 0;
 		currScaleIndex = 0;
-		//oldVal = 1;
-
-		//foreach (Transform c in transform) {
-		//	Destroy(c.gameObject);
-		//}
 
 		if (folder != null) Destroy(folder.gameObject);
 		folder = new GameObject().transform;

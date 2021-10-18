@@ -77,7 +77,9 @@ public class ApiProxy : MonoBehaviour {
 			var dt = (2 - (Time.time - startTime) / (Time.time + Time.deltaTime));
 			mul += Random.Range(0.006f * dt, 0.0085f * dt);
 			yield return new WaitForSeconds(.1f);
-		} {
+		}
+
+        {
 			_d0["room_info"]["is_ended"] = "1";
 			_d0["room_info"]["id"] = "1";
 			_d0["room_info"]["multiplier_per"] = mul.ToString();

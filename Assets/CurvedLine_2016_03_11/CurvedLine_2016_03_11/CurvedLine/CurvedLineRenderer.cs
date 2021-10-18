@@ -71,9 +71,9 @@ public class CurvedLineRenderer : MonoBehaviour
 			Vector3[] smoothedPoints = LineSmoother.SmoothLine( linePositions, lineSegmentSize );
 
 			//set line settings
-			line.SetVertexCount( smoothedPoints.Length );
+			//line.SetVertexCount( smoothedPoints.Length );
 			line.SetPositions( smoothedPoints );
-			line.SetWidth( lineWidth, lineWidth );
+			//line.SetWidth( lineWidth, lineWidth );
 		}
 	}
 

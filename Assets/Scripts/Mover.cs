@@ -76,15 +76,6 @@ public class Mover : MonoBehaviour
 
     //    StartCoroutine(PerSec());
     }
-
-    //Bounds CalculateBounds(RectTransform transform)
-    //{
-    //    Bounds bounds = new Bounds(transform.position, new Vector3(transform.rect.width, transform.rect.height, 0.0f));
-
-    //    Debug.Log(bounds.min);
-    //    Debug.Log(bounds.max);
-    //    return bounds;
-    //}
     public void Move(float mul)
     {
         myMul = mul;
@@ -132,126 +123,13 @@ public class Mover : MonoBehaviour
         }
      
     }
-    //IEnumerator PerSec()
-    //{
-    //    while(true)
-    //    {
-    //        yield return new WaitForSeconds(1);
-    //        list.Add(_payout);
-    //        wg.Populatelist(list);
-    //    }
-       
-    //}
-    void Update()
-    {
-
-
-
-          MoveUpdate();
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    //   x++;
-        //    //   y ++ ;
-        //    //      x = Mathf.Lerp(x, x++, 0.1f);
-         
-        //    x++;
-        //    y++;
-        //}
-
-        //    if (transform.position.x < x )
-        //        transform.Translate(new Vector3(transform.position.x + x, 0, 0) * Time.deltaTime);
-
-        //if (transform.position.y < y)
-      //                transform.Translate(new Vector3(0, y, 0) * Time.deltaTime);
-
-        
-
-        //payoutText.color = roundOverText.color = _roundOver ? Color.red : Color.red;
-        //roundOverText.text = _roundOver ? "Round Over" : "Current Payout";
-
-        //if (!_roundOver)
-        //{
-        //    _duration += Time.deltaTime;
-
-        //    HandleMovement();
-        //    HandlePayout();
-        //    HandleUI();
-
-        //    if (transform.position.x > screenBounds.y)
-        //    {
-        //        _roundOver = true;
-
-        //         OnEnd.Invoke();
-
-        //        Invoke(nameof(Restart), 2.5f);
-        //    }
-        //}
+    void Update() {
+        MoveUpdate();
     }
-
-    //void HandleMovement()
-    //{
-       
-    //   var ratio = Mathf.InverseLerp(screenBounds.x, screenBounds.y, transform.position.x);
-      
-    //   //_hSpeed = Mathf.Lerp(transform.position.x, transform.position.x + wg.timeStart,ratio);
-    //   //_vSpeed = Mathf.Lerp(transform.position.y, transform.position.y + myMul, ratio);
-    //    _zRot = Mathf.Lerp(0, maxRotation, ratio);
-
-    //    transform.Translate( new Vector3(wg.counter, myMul, 0) * Time.deltaTime);   //   *  _hSpeed 
-    //   // transform.Translate(new Vector3(0, myMul, 0)  * Time.fixedDeltaTime);    //    * _vSpeed
-    //    transform.eulerAngles = new Vector3(0, 0, _zRot);
-    //  //  Mathf.Clamp(transform.position.x, screenBounds.x, screenBounds.y);
-    //}
-
-    //void HandlePayout(float mul)
-    //{
-    //  //  payoutLayout.gameObject.SetActive(true);
-    //    mul += _payoutRate * Time.deltaTime;
-
-    //    //if (Time.time > _nextCoin)
-    //    //{
-    //    //    _nextCoin = Time.time + Random.Range(coinInterval.x, coinInterval.y);
-    //    //    var c = Instantiate(coinPrefab, transform.position, Quaternion.identity);
-    //    //    _coins.Add(c);
-    //    //}
-    //}
-
-    //void HandleUI()
-    //{
-    //    payoutText.text = $"{_payout.ToString("F2")}x";
-        
-    //    //if(Time.time > _lastTimeStamp)
-    //    //{
-    //    //    _lastTimeStamp = Time.time + 1;
-
-    //    //    var ui = Instantiate(timePrefabUI, timeLayout.transform);
-    //    //    ui.GetComponentInChildren<TMP_Text>().text = Mathf.RoundToInt(_duration).ToString();
-    //    //}
-    //}
 
     void Restart()
     {
-        //foreach(var coin in _coins)
-        //{
-        //    Destroy(coin);
-        //}
-
-        //foreach (var ui in timeLayout.GetComponentsInChildren<Transform>())
-        //{
-        //    if (ui != timeLayout.transform)
-        //    {
-        //        Destroy(ui.gameObject);
-        //    }
-        //}
-
-       // transform.position = _startPos;
-      //  _coins.Clear();
-       
-       // wg.timerActive = false;
-        ResetValues();
-
-     
-      
+        ResetValues();      
     }
     public void SetPos()
     {
@@ -262,7 +140,7 @@ public class Mover : MonoBehaviour
        // _roundOver = false;
        // OnRestart.Invoke();
         myMul = 0;
-        wg.counter = 0;
+        wg.counter = 10;
        // transform.position = _startPos;
         wg.timeStart = 0;
        // wg.timeStart = 0;

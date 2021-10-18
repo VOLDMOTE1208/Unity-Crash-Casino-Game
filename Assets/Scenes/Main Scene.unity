@@ -8460,7 +8460,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1116342635
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10749,6 +10749,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cc9b42b3af74574cadbc3ae61b85855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stepTime: 6
   login_Email_usernameText: {fileID: 1661685797}
   login_passwordText: {fileID: 1496361827}
   amountText: {fileID: 1252448580}
@@ -10768,6 +10769,7 @@ MonoBehaviour:
   welcomePanel: {fileID: 1746652727}
   changePassPanel: {fileID: 425827001}
   sp_Script: {fileID: 876040639}
+  payOutText: {fileID: 1895680155}
   info_errorText: {fileID: 657639216}
   welcomeText: {fileID: 160787728}
   tot_BidsText: {fileID: 2021339948}
@@ -13702,7 +13704,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1746652728
 RectTransform:
   m_ObjectHideFlags: 0

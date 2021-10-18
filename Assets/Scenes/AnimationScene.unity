@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2276,6 +2276,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   circleSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  timeStart: 0
+  counter: 0
+  listX: 
 --- !u!1 &781363161
 GameObject:
   m_ObjectHideFlags: 0
@@ -2837,13 +2840,14 @@ GameObject:
   m_Component:
   - component: {fileID: 945252832}
   - component: {fileID: 945252828}
+  - component: {fileID: 945252829}
   m_Layer: 0
   m_Name: Mover
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &945252828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2856,8 +2860,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeedf115f6b93f34487556c5cb5d3252, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  horizontalSpeed: {x: 10, y: 1}
-  verticalSpeed: {x: 0, y: 1.5}
   coinInterval: {x: 0.2, y: 0.8}
   screenBounds: {x: -7, y: 9.5}
   maxRotation: 25
@@ -2866,11 +2868,6 @@ MonoBehaviour:
   roundOverText: {fileID: 1361272437}
   coinPrefab: {fileID: 2417391382678390369, guid: ad65db39bcac1d44687b5fbe4e66b0b6,
     type: 3}
-  timeLayout: {fileID: 347723229}
-  payoutLayout: {fileID: 1137302937}
-  timePrefabUI: {fileID: 672987941080171411, guid: 842aba8aadea7674da8aab4f574992a3,
-    type: 3}
-  payoutPrefabUI: {fileID: 0}
   OnEnd:
     m_PersistentCalls:
       m_Calls:
@@ -2932,6 +2929,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  wg: {fileID: 0}
+  listY: []
+  myEnded: 0
+--- !u!50 &945252829
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945252827}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!4 &945252832
 Transform:
   m_ObjectHideFlags: 0

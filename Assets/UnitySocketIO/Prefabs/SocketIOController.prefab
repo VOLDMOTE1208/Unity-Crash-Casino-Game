@@ -44,12 +44,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settings:
-    url: localhost:3000
+    url: 192.168.115.164:3000
     port: 3000
     sslEnabled: 1
     reconnectTime: 500
     timeToDropAck: 250
     pingTimeout: 5
     pingInterval: 10
-  domain: localhost
   socketIO: {fileID: 0}

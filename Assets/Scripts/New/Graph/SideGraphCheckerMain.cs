@@ -7,7 +7,6 @@ public class SideGraphCheckerMain : MonoBehaviour {
 
 	private void OnTriggerEnter2D(Collider2D collision) {
 		if (collision.gameObject.tag == "CheckMark") {
-			//Debug.Log("ы");
 			graph.UpscaleGraph();
 		} 
 	}

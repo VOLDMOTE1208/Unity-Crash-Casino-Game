@@ -122,7 +122,6 @@ public class FcmData : MonoBehaviour {
         verifyCode_panel.SetActive(false);
         forgetPass_panel.SetActive(false);
         welcomePanel.SetActive(false);
-        GetOnlineUsersBid();
 
         io = SocketIOController.instance;
         io.On("connect", (e) => {
@@ -166,20 +165,21 @@ public class FcmData : MonoBehaviour {
     #region ****** EXTRAS *******
     Coroutine vidCor;
     public void PlayVideo() {
-        //video.SetActive(true);
-        //videoPlayer.url = System.IO.Path.Combine(Application.streamingAssetsPath, "scene rocket.mp4");
+        video.SetActive(true);
+        videoPlayer.url = System.IO.Path.Combine(Application.streamingAssetsPath, "scene rocket.mp4");
 
-        //IEnumerator _cor() {
-        //    yield return new WaitForEndOfFrame();
-        //    videoPlayer.Play();
-        //}
-        //vidCor = StartCoroutine(_cor());
+        IEnumerator _cor() {
+            yield return new WaitForEndOfFrame();
+            videoPlayer.Play();
+        }
+        vidCor = StartCoroutine(_cor());
     }
 
     public void StopVideo() {
-        //if (vidCor != null) StopCoroutine(vidCor);
-        //videoPlayer.Stop();
-        //video.SetActive(false);
+        if (vidCor != null)
+            StopCoroutine(vidCor);
+        videoPlayer.Stop();
+        video.SetActive(false);
     }
 
     void ChangeText(string msg, bool isRed) {
@@ -272,48 +272,15 @@ public class FcmData : MonoBehaviour {
             string requestURL = Global.GetDomain() + "/api/signup";
 
             UnityWebRequest www = UnityWebRequest.Post(requestURL, formData);
-            Debug.Log(Global.GetDomain());
             www.SetRequestHeader("Accept", "application/json");
             www.uploadHandler.contentType = "application/json";
             StartCoroutine(iRequest(www));
-        }
-    }
-
-    public void api_signup_res(string ResponseData) { // unused
-        JSONNode userInfo = JSON.Parse((ResponseData).ToString());
-        Debug.Log(userInfo.Value);
-        var code = Int32.Parse(userInfo["code"].Value);
-        var msg = userInfo["msg"].Value;
-
-        if (code == 1) {
-            ChangeText(msg, false);
-            sp_Script.SwitchLogin();
-            login_Email_usernameText.text = userData.username;
-            login_passwordText.text = userData.password;
-            //  verifyCode_panel.SetActive(true);
-        } else {
-            ChangeText(msg, true);
         }
     }
     #endregion
 
 
     #region*********** Log IN ***********
-    public void user_logged_in(string Response) {
-        JSONNode userInfo = JSON.Parse(Response);
-        var verify = Int32.Parse(userInfo["user_info"]["is_verified"].Value);
-        userData.username = userInfo["user_info"]["username"].Value;
-        userData.balance = userInfo["user_info"]["balance"].Value;
-        userData.level = userInfo["user_info"]["level"].Value;
-
-        if (verify == 1) {
-            registerGO.SetActive(false);
-            welcomePanel.SetActive(true);
-            welcomeText.text = "Welcome \"" + userData.username + "\" \nBalance: " + userData.balance + "\nLevel: " + userData.level;
-
-            StopVideo();
-        }
-    }
 
     // todo: rework login and register api
     public void Login() {
@@ -333,41 +300,12 @@ public class FcmData : MonoBehaviour {
             string requestURL = Global.GetDomain() + "/api/login";
 
             UnityWebRequest www = UnityWebRequest.Post(requestURL, formData);
-            Debug.Log(Global.GetDomain());
             www.SetRequestHeader("Accept", "application/json");
             www.uploadHandler.contentType = "application/json";
             StartCoroutine(iRequest(www));
 
         } else {
             info_errorText.text = "Enter email or password";
-        }
-    }
-
-    public void api_signin_res(string ResponseData) {
-        JSONNode userInfo = JSON.Parse((ResponseData).ToString());
-        Debug.Log(userInfo["code"]);
-        var code = Int32.Parse(userInfo["code"].Value);
-        var msg = userInfo["msg"].Value;
-        var verify = Int32.Parse(userInfo["user_info"]["is_verified"].Value);
-        var userName = userInfo["user_info"]["username"].Value;
-        var balance = userInfo["user_info"]["balance"].Value;
-        var level = userInfo["user_info"]["level"].Value;
-
-        if (code == 1) {
-            ChangeText(msg, false);
-
-            if (verify == 0) {
-                verifyCode_panel.SetActive(true);
-            } else {
-                verifyCode_panel.SetActive(false);
-                registerGO.SetActive(false);
-                welcomePanel.SetActive(true);
-                welcomeText.text = "Welcome \"" + userName + "\" \nBalance: " + balance + "\nLevel: " + level;
-
-                StopVideo();
-            }
-        } else {
-            ChangeText(msg, true);
         }
     }
     #endregion
@@ -382,7 +320,6 @@ public class FcmData : MonoBehaviour {
 
     public void api_logout_res(string ResponseData) {
         JSONNode userInfo = JSON.Parse((ResponseData).ToString());
-        Debug.Log(userInfo.Value);
         var code = Int32.Parse(userInfo["code"].Value);
         var msg = userInfo["msg"].Value;
 
@@ -423,7 +360,6 @@ public class FcmData : MonoBehaviour {
     public void api_forget_password_res(string ResponseData) {
 
         JSONNode userInfo = JSON.Parse((ResponseData).ToString());
-        Debug.Log(userInfo.Value);
         var code = Int32.Parse(userInfo["code"].Value);
         var msg = userInfo["msg"].Value;
 
@@ -461,84 +397,13 @@ public class FcmData : MonoBehaviour {
         yield return null;
     }
 
-    public void api_change_password_res(string ResponseData) {
-
-        JSONNode userInfo = JSON.Parse((ResponseData).ToString());
-        Debug.Log(userInfo.Value);
-        var code = Int32.Parse(userInfo["code"].Value);
-        var msg = userInfo["msg"].Value;
-
-        if (code == 1) {
-            ChangeText(msg, false);
-            // verifyCode_panel.SetActive(true);
-
-
-            ////////////////////////////////////// ADD NEW PASSWORD CODE
-            changePassPanel.SetActive(false);
-            // login_usernameText.text = userData.username;
-
-        } else {
-            ChangeText(msg, true);
-        }
-    }
-
     #endregion
 
 
-    #region **********  CODE VERIFICATION ***********
-    public void VerifyCode() {
-        if (verifyCode_Text.text != "") {
-            userData = new UserData();
-            userData.verification_code = verifyCode_Text.text;
-            Application.ExternalCall("api_verify_code", userData.verification_code);
-        } else {
-            info_errorText.color = Color.red;
-            info_errorText.text = "Kindly Re-enter Correct info";
-        }
-    }
-
-    public void api_verify_code_res(string ResponseData) {
-        JSONNode userInfo = JSON.Parse((ResponseData).ToString());
-        Debug.Log(userInfo.Value);
-        var code = Int32.Parse(userInfo["code"].Value);
-        var msg = userInfo["msg"].Value;
-
-        if (code == 1) {
-            ChangeText(msg, false);
-            verifyCode_panel.SetActive(false);
-            registerGO.SetActive(false);
-            welcomePanel.SetActive(true);
-            welcomeText.text = "Welcome \"" + userData.username + "\"";
-        } else {
-            ChangeText(msg, true);
-        }
-    }
-
-    public void ResendVerifyCode() {
-        Application.ExternalCall("api_resend_code");
-    }
-
-    public void api_resend_code_res(string ResponseData) {
-        JSONNode userInfo = JSON.Parse((ResponseData).ToString());
-        Debug.Log(userInfo.Value);
-        var code = Int32.Parse(userInfo["code"].Value);
-        var msg = userInfo["msg"].Value;
-        if (code == 1) {
-            ChangeText(msg, false);
-        } else {
-            ChangeText(msg, true);
-        }
-    }
-    #endregion
 
     #region ******** Get Online Users Bid ********
-    public void GetOnlineUsersBid() {
-        Application.ExternalCall("api_get_bids");
-    }
-
     public void api_get_bids_res(string ResponseData) {
         JSONNode userInfo = JSON.Parse((ResponseData).ToString());
-        //Debug.Log(userInfo.Value);
         var length = userInfo["users_req_bids"].Count + userInfo["users_bids"].Count;
         users_Bids_Username = new string[length];
         users_Bids_Amount = new string[length];
@@ -592,7 +457,6 @@ public class FcmData : MonoBehaviour {
     public void api_leave_room_res(string ResponseData) {
         if (roomJoined) {
             JSONNode userInfo = JSON.Parse((ResponseData).ToString());
-            Debug.Log(userInfo.Value);
             var code = Int32.Parse(userInfo["code"].Value);
             var msg = userInfo["msg"].Value;
             if (code == 1) {
@@ -648,14 +512,13 @@ public class FcmData : MonoBehaviour {
         }
 
         payoutText.text = $"{data.multipliyer.ToString("F2")}x";
-
+        
         var length = info["room_users_info"].Count;
         data.users = new List<RoomUserData>(length);
 
         for (int i = 0; i < length; i++) {
             RoomUserData user = new RoomUserData();
             user.Amount = info["room_users_info"][i]["amount"].Value;
-            //user.Name = info["room_users_info"][i]["name"].Value;
             user.LeaveTime = info["room_users_info"][i]["leave_time"].Value;
             user.multiplier_level = info["room_users_info"][i]["multiplier_level"].Value;
 
@@ -666,7 +529,6 @@ public class FcmData : MonoBehaviour {
     }
 
     public void room_joined(string Response) {
-        GetOnlineUsersBid();
         // fcmText.text = Response;
         JSONNode info = JSON.Parse(Response);
         var msg = info["body"].Value;
@@ -678,22 +540,21 @@ public class FcmData : MonoBehaviour {
     }
 
     public void bet_lost(string Response) {
-        // GetOnlineUsersBid();
         fcmText.text = Response;
         JSONNode info = JSON.Parse(Response);
-        Debug.Log(info);
         var msg = info["body"].Value;
         ChangeText(msg, false);
         gameControl.EndGame();
         payOutText.text = "Bet";
-        //StartCoroutine(BetTime());
-		payoutText.color = Color.red;
+        StartCoroutine(BetTime());
+        payoutText.color = Color.red;
         roundOverText.color = Color.red;
-        roundOverText.text = "Round Over";
-        while ((int)(stepTime - Time.deltaTime) > -1) {
-            payoutText.text = ((int)(stepTime - Time.deltaTime)).ToString();
-            stepTime -= Time.deltaTime;
-        }
+        //amountText.text = $"{(float.Parse(amountText.text) * data.multipliyer).ToString("F2")}";
+        //roundOverText.text = "Round Over";
+        //while ((int)(stepTime - Time.deltaTime) > -1) {
+        //    payoutText.text = ((int)(stepTime - Time.deltaTime)).ToString();
+        //    stepTime -= Time.deltaTime;
+        //}
     }
 
     IEnumerator BetTime() {
@@ -704,19 +565,10 @@ public class FcmData : MonoBehaviour {
         payoutText.text = "Bet time";
         roundOverText.text = "";
     }
-
-    IEnumerator Restart() {
-        yield return new WaitForSeconds(2f);
-
-        payoutText.color = Color.white;
-        roundOverText.color = Color.white;
-        roundOverText.text = "Current Payout";
-        gameControl.StartGame();
-    }
     #endregion
 
 
-    public void _startGame() {        
+    public void _startGame() {
         gameControl.StartGame();
     }
 }
