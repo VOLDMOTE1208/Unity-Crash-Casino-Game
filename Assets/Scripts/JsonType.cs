@@ -10,6 +10,8 @@ public class JsonType {
 public class ReceiveJsonObject {
     public string userName;
     public string betAmount;
+    public int timeCount;
+    public float currentAmount;
     public ReceiveJsonObject() {
     }
     public static ReceiveJsonObject CreateFromJSON(string data) {

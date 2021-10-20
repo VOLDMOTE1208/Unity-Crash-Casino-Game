@@ -85,7 +85,6 @@ public class FcmData : MonoBehaviour {
     public GameControl gameControl;
 
     public GameObject mover;
-    public GameObject video;
 
     public VideoPlayer videoPlayer;
 
@@ -128,8 +127,32 @@ public class FcmData : MonoBehaviour {
             io.On("user list", (res) => {
                 SetResponse(res);
             });
+
+            io.On("user list", (res) => {
+                SetResponse(res);
+            });
+
+            io.On("startTime", (res) => {
+                SetStartTime(res);
+            });
+
+            io.On("currentAmount", (res) => {
+                SetCurrentAmount(res);
+            });
+
         });
         io.Connect();
+    }
+
+    void SetStartTime(SocketIOEvent socketIOEvent) {
+        var res = ReceiveJsonObject.CreateFromJSON(socketIOEvent.data);
+        Debug.Log(res.timeCount.ToString());
+        payoutText.text = res.timeCount.ToString();
+    }
+    void SetCurrentAmount(SocketIOEvent socketIOEvent) {
+        var res = ReceiveJsonObject.CreateFromJSON(socketIOEvent.data);
+        Debug.Log(res.currentAmount.ToString());
+        payoutText.text = res.currentAmount.ToString();
     }
 
     void SetResponse(SocketIOEvent socketIOEvent) {
