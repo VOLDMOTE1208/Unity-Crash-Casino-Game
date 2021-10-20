@@ -117,7 +117,6 @@ public class FcmData : MonoBehaviour {
         //login_Email_usernameText.text=PlayerPrefs.GetString("_PlayerEmail");
         //login_passwordText.text= PlayerPrefs.GetString("_PlayerPass");
         amountText.text = "100";
-        PlayVideo();
 		registerGO.SetActive(true);
         verifyCode_panel.SetActive(false);
         forgetPass_panel.SetActive(false);
@@ -164,23 +163,6 @@ public class FcmData : MonoBehaviour {
 
     #region ****** EXTRAS *******
     Coroutine vidCor;
-    public void PlayVideo() {
-        video.SetActive(true);
-        videoPlayer.url = System.IO.Path.Combine(Application.streamingAssetsPath, "scene rocket.mp4");
-
-        IEnumerator _cor() {
-            yield return new WaitForEndOfFrame();
-            videoPlayer.Play();
-        }
-        vidCor = StartCoroutine(_cor());
-    }
-
-    public void StopVideo() {
-        if (vidCor != null)
-            StopCoroutine(vidCor);
-        videoPlayer.Stop();
-        video.SetActive(false);
-    }
 
     void ChangeText(string msg, bool isRed) {
         info_errorText.gameObject.SetActive(true);
@@ -238,8 +220,6 @@ public class FcmData : MonoBehaviour {
                 verifyCode_panel.SetActive(false);
                 registerGO.SetActive(false);
                 welcomePanel.SetActive(true);
-
-                StopVideo();
                 info_errorText.transform.GetComponent<TextMeshProUGUI>().SetText("Login Success.");
             }                
         }
@@ -536,7 +516,6 @@ public class FcmData : MonoBehaviour {
         roomJoined = true;
         //mover.SetActive(true);
         gameControl.StartGame();
-        StopVideo();
     }
 
     public void bet_lost(string Response) {
@@ -559,7 +538,6 @@ public class FcmData : MonoBehaviour {
 
     IEnumerator BetTime() {
         yield return new WaitForSeconds(2f);
-        PlayVideo();
         payoutText.color = Color.white;
         roundOverText.color = Color.white;
         payoutText.text = "Bet time";

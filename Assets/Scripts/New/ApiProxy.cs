@@ -13,20 +13,19 @@ public class ApiProxy : MonoBehaviour {
 	public float maxTime;
 	private void Start() {
         //StartCoroutine(play());
-        try
-        {
-            StartCoroutine(play());
-        }
-        catch (Exception)
-        {
-            StartCoroutine(play());
-            throw;
-        }
+        //try
+        //{
+        //    StartCoroutine(play());
+        //}
+        //catch (Exception)
+        //{
+        //    StartCoroutine(play());
+        //    throw;
+        //}
 	}
 
 	IEnumerator play() {
 		yield return new WaitForEndOfFrame();
-		ApiManager.StopVideo();
 		StartCoroutine(RoomData(0));
 	}
 
