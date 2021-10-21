@@ -12,6 +12,7 @@ public class ReceiveJsonObject {
     public string betAmount;
     public int timeCount;
     public float currentAmount;
+    public bool running;
     public ReceiveJsonObject() {
     }
     public static ReceiveJsonObject CreateFromJSON(string data) {

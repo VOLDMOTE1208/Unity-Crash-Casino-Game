@@ -76,6 +76,7 @@ public class FcmData : MonoBehaviour {
     public TMP_Text tot_UsersText;
     public UserinfoText userText;
     public TMP_Text fcmText;
+    public TMP_Text betButton;
 
     public TMP_Text payoutText;
     public TMP_Text roundOverText;
@@ -140,8 +141,21 @@ public class FcmData : MonoBehaviour {
                 SetCurrentAmount(res);
             });
 
+            io.On("isRunning", (res) => {
+                Running(res);
+            });
+
         });
         io.Connect();
+    }
+
+    void Running(SocketIOEvent socketIOEvent) {
+        var res = ReceiveJsonObject.CreateFromJSON(socketIOEvent.data);
+        Debug.Log(res.running.ToString());
+        if(res.running)
+            betButton.text = "Bet"+"\n"+"(next round)";
+        else if (!res.running)
+            betButton.text = "Cash Out";
     }
 
     void SetStartTime(SocketIOEvent socketIOEvent) {
@@ -152,7 +166,7 @@ public class FcmData : MonoBehaviour {
     void SetCurrentAmount(SocketIOEvent socketIOEvent) {
         var res = ReceiveJsonObject.CreateFromJSON(socketIOEvent.data);
         Debug.Log(res.currentAmount.ToString());
-        payoutText.text = res.currentAmount.ToString();
+        payoutText.text = res.currentAmount.ToString()+"x";
     }
 
     void SetResponse(SocketIOEvent socketIOEvent) {
@@ -179,9 +193,8 @@ public class FcmData : MonoBehaviour {
             amountText.text = (myTotalAmount - betamount).ToString();
             JObject.userName = PlayerPrefs.GetString("_UserName");
             io.Emit("bet amount", JsonUtility.ToJson(JObject));
-            payOutText.text = "Cash Out";
         } else
-            info_errorText.text = "Not enough Funds";        
+            info_errorText.text = "Not enough Funds";
     }
 
     #region ****** EXTRAS *******
