@@ -66,6 +66,8 @@ public class FcmData : MonoBehaviour {
     public GameObject changePassPanel;
     public SwitchPanel sp_Script;
 
+    public GameObject cashOutButton;
+    public GameObject betButton;
 
     [Header("Texts")]
     public TMP_Text payOutText;
@@ -76,7 +78,6 @@ public class FcmData : MonoBehaviour {
     public TMP_Text tot_UsersText;
     public UserinfoText userText;
     public TMP_Text fcmText;
-    public TMP_Text betButton;
 
     public TMP_Text payoutText;
     public TMP_Text roundOverText;
@@ -145,6 +146,14 @@ public class FcmData : MonoBehaviour {
                 Running(res);
             });
 
+            io.On("gameStart", (res) => {
+                gameStart(res);
+            });
+
+            io.On("BettingResult", (res) => {
+                BetResult(res);
+            });
+
         });
         io.Connect();
     }
@@ -152,10 +161,21 @@ public class FcmData : MonoBehaviour {
     void Running(SocketIOEvent socketIOEvent) {
         var res = ReceiveJsonObject.CreateFromJSON(socketIOEvent.data);
         Debug.Log(res.running.ToString());
-        if(res.running)
-            betButton.text = "Bet"+"\n"+"(next round)";
-        else if (!res.running)
-            betButton.text = "Cash Out";
+        if (res.running)
+            info_errorText.text = "Game is already running! Next round!";
+    }
+
+    void gameStart(SocketIOEvent socketIOEvent) {
+        var res = ReceiveJsonObject.CreateFromJSON(socketIOEvent.data);
+        amountText.text = res.leftAmount.ToString();
+        info_errorText.text = "Game start!";
+        betButton.SetActive(false);
+        cashOutButton.SetActive(true);
+    }
+
+    void BetResult(SocketIOEvent socketIOEvent) {
+        var res = ReceiveJsonObject.CreateFromJSON(socketIOEvent.data);
+        amountText.text = res.leftAmount.ToString();        
     }
 
     void SetStartTime(SocketIOEvent socketIOEvent) {
@@ -188,13 +208,23 @@ public class FcmData : MonoBehaviour {
         float myTotalAmount = float.Parse(amountText.text);
         float betamount = float.Parse(betAmount.text);
         if (betamount < myTotalAmount) {
-            JObject.betAmount = betAmount.text;
-            JObject.autoCashAmount = setAutoCashOut.text;
-            amountText.text = (myTotalAmount - betamount).ToString();
+            JObject.betAmount = betamount;
+            JObject.autoCashAmount = float.Parse(setAutoCashOut.text);
+            //amountText.text = (myTotalAmount - betamount).ToString();
             JObject.userName = PlayerPrefs.GetString("_UserName");
             io.Emit("bet amount", JsonUtility.ToJson(JObject));
         } else
             info_errorText.text = "Not enough Funds";
+    }
+
+    public void CashOut() {
+        float betamount = float.Parse(betAmount.text);
+        JsonType JObject = new JsonType();
+        JObject.IsCashOut = true;
+        JObject.betAmount = betamount;
+        io.Emit("CashOut", JsonUtility.ToJson(JObject));
+        betButton.SetActive(true);
+        cashOutButton.SetActive(false);
     }
 
     #region ****** EXTRAS *******
