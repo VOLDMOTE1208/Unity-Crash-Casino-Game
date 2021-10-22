@@ -117,7 +117,6 @@ public class FcmData : MonoBehaviour {
     private void Start() {
         //login_Email_usernameText.text=PlayerPrefs.GetString("_PlayerEmail");
         //login_passwordText.text= PlayerPrefs.GetString("_PlayerPass");
-        amountText.text = "100";
 		registerGO.SetActive(true);
         verifyCode_panel.SetActive(false);
         forgetPass_panel.SetActive(false);
@@ -167,6 +166,7 @@ public class FcmData : MonoBehaviour {
 
     void gameStart(SocketIOEvent socketIOEvent) {
         var res = ReceiveJsonObject.CreateFromJSON(socketIOEvent.data);
+        Debug.Log(res.leftAmount.ToString());
         amountText.text = res.leftAmount.ToString();
         info_errorText.text = "Game start!";
         betButton.SetActive(false);
@@ -185,7 +185,6 @@ public class FcmData : MonoBehaviour {
     }
     void SetCurrentAmount(SocketIOEvent socketIOEvent) {
         var res = ReceiveJsonObject.CreateFromJSON(socketIOEvent.data);
-        Debug.Log(res.currentAmount.ToString());
         payoutText.text = res.currentAmount.ToString()+"x";
     }
 
